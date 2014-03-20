@@ -2,6 +2,8 @@ define(['jquery'], function($) {
   var context;
   var source;
   var gain;
+  var stopFrequencyWobble = function() {}
+  var stopGainWobble = function() {}
 
   var createContext = function() {
     var context
@@ -21,26 +23,32 @@ define(['jquery'], function($) {
 
   var start = function() {
     source = context.createOscillator()
-    source.frequency.setValueAtTime(440, context.currentTime)
-    wobble()
+    stopFrequencyWobble = wobble(source.frequency, 440, 880, 2)
     source.connect(gain)
-    //gain.gain.setValueAtTime(1.0, context.currentTime)
-    //gain.gain.exponentialRampToValueAtTime(0.1, context.currentTime + 5)
+    stopGainWobble = wobble(gain.gain, 1.0, 0.1, 5)
     source.start(0)
   }
 
   var stop = function() {
-    if (wobbler) clearTimeout(wobbler)
+    stopFrequencyWobble()
+    stopGainWobble()
     source.stop(0)
     source.disconnect()
     source = null
   }
 
-  var wobbler
-  var wobble = function() {
-    source.frequency.exponentialRampToValueAtTime(880, context.currentTime + 2)
-    source.frequency.exponentialRampToValueAtTime(440, context.currentTime + 4)
-    wobbler = setTimeout(wobble, 4*1000)
+  var wobble = function(param, a, b, t) {
+    var timeout
+    var round = function() {
+      param.setValueAtTime(a, context.currentTime)
+      param.exponentialRampToValueAtTime(b, context.currentTime + t)
+      param.exponentialRampToValueAtTime(a, context.currentTime + t*2)
+      timeout = setTimeout(round, 2*t*1000)
+    }
+    round()
+    return function() {
+      clearTimeout(timeout)
+    }
   }
 
   $('#play').on('change', function() {
