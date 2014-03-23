@@ -1,7 +1,8 @@
 define(['jquery'], function($) {
-  var context;
-  var source;
-  var gain;
+  var context
+  var source
+  var filter
+  var gain
   var stopFrequencyWobble = function() {}
   var stopGainWobble = function() {}
 
@@ -23,15 +24,27 @@ define(['jquery'], function($) {
 
   var start = function() {
     source = context.createOscillator()
-    stopFrequencyWobble = wobble(source.frequency, 440, 880, 2)
-    source.connect(gain)
-    stopGainWobble = wobble(gain.gain, 1.0, 0.1, 5)
+    stopFrequencyWobble = wobble(source.frequency, 110, 440, 2)
+    //source.connect(gain)
+    //stopGainWobble = wobble(gain.gain, 1.0, 0.1, 5)
+
+    filter = context.createBiquadFilter();
+    // Create the audio graph.
+    source.connect(filter);
+    filter.connect(context.destination);
+    // Create and specify parameters for the low-pass filter.
+    filter.type = 0; // Low-pass filter. See BiquadFilterNode docs
+    filter.frequency.value = 220
+    filter.Q.value = 1
+
     source.start(0)
   }
 
   var stop = function() {
     stopFrequencyWobble()
     stopGainWobble()
+    filter.disconnect()
+    filter = null
     source.stop(0)
     source.disconnect()
     source = null
@@ -62,8 +75,8 @@ define(['jquery'], function($) {
   return {
     ready: function() {
       context = createContext()
-      gain = context.createGain()
-      gain.connect(context.destination)
+      //gain = context.createGain()
+      //gain.connect(context.destination)
     }
   }
 })
