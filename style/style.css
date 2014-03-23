@@ -1,0 +1,15 @@
+#target1 {
+  position: absolute;
+  left: 20%;
+  top: 20%;
+  width: 10vh;
+  height: 10vh;
+  background-color: blue;
+}
+
+#pointer {
+  position: absolute;
+  width: 10vh;
+  height: 10vh;
+  border: solid red 1px;
+}

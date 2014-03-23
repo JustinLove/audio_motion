@@ -6,12 +6,15 @@ define(['jquery', 'leap'], function($) {
   var stopFrequencyWobble = function() {}
   var stopGainWobble = function() {}
   var stopAnimation = function() {}
+  var stopPointing = function() {}
 
 
   var controller
   var rWidth
   var rHeight
   var rDepth
+  var rx
+  var ry
 
   var createContext = function() {
     var context
@@ -31,6 +34,8 @@ define(['jquery', 'leap'], function($) {
 
   var start = function() {
     source = context.createOscillator()
+    source.frequency.value = 440
+    gain.gain.value = 0.5
     //stopFrequencyWobble = wobble(source.frequency, 110, 440, 2)
     //source.connect(gain)
     //stopGainWobble = wobble(gain.gain, 1.0, 0.1, 5)
@@ -44,10 +49,11 @@ define(['jquery', 'leap'], function($) {
     filter.frequency.value = 440
     filter.Q.value = 1
 
-    source.start(0)
+    //source.start(0)
 
     controller.connect()
-    stopAnimation = animate()
+    //stopAnimation = animate()
+    stopPointer = point()
   }
 
   var stop = function() {
@@ -55,6 +61,7 @@ define(['jquery', 'leap'], function($) {
     stopFrequencyWobble()
     stopGainWobble()
     stopAnimation()
+    stopPointing()
     filter.disconnect()
     filter = null
     source.stop(0)
@@ -81,10 +88,6 @@ define(['jquery', 'leap'], function($) {
     var round = function() {
       processFrame(controller.frame())
 
-      $('#width').text(rWidth)
-      $('#height').text(rHeight)
-      $('#depth').text(rDepth)
-
       source.frequency.value = 2*rHeight
       //filter.frequency.value = Math.abs(rWidth)
       filter.Q.value = rWidth/2
@@ -98,13 +101,54 @@ define(['jquery', 'leap'], function($) {
     }
   }
 
+  var point = function() {
+    var run = true
+    var round = function() {
+      processFrame(controller.frame())
+
+      var $pointer = $('#pointer')
+
+      $pointer.css('left', rx)
+      $pointer.css('top', ry)
+
+      if (run) {
+        requestAnimationFrame(round)
+      }
+    }
+    round()
+    return function() {
+      run = false
+    }
+  }
+
   var processFrame = function(frame) {
     if (frame.hands[0]) {
       var s = frame.hands[0].stabilizedPalmPosition
-      console.log(s)
+      //console.log(s)
       rWidth = s[0]
       rHeight = s[1]
       rDepth = s[2]
+
+      $('#width').text(rWidth)
+      $('#height').text(rHeight)
+      $('#depth').text(rDepth)
+    }
+
+    if (frame.pointables[0]) {
+      var t = frame.pointables[0].stabilizedTipPosition
+      var d = frame.pointables[0].direction
+
+      rx = t[0] + d[0]*700
+      ry = t[1] + d[1]*700
+
+      var width = $(document).width() / 2
+      var height = $(document).height()
+
+      rx = width + rx/300 * width
+      ry = height - ry/300 * height
+
+      $('#rx').text(rx)
+      $('#ry').text(ry)
     }
   }
 
@@ -123,6 +167,8 @@ define(['jquery', 'leap'], function($) {
       gain.connect(context.destination)
 
       controller = new Leap.Controller()
+
+      console.log($(document).width())
     }
   }
 })
