@@ -44,7 +44,7 @@ define(['leap'], function() {
     var s = data.stabilizedPalmPosition
     //console.log(s)
     hand.width = s[0]
-    hand.height = s[1] - 50
+    hand.height = s[1]
     hand.depth = s[2]
 
     $div.find('.id').text(hand.id)

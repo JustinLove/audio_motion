@@ -29,7 +29,7 @@ function(audiograph, hands, targets, $) {
       //volume.gain.value = Math.sqrt(Math.max(rDepth, 0))
 
       audiograph.delay.delayTime.value = hands.left.width / -200
-      audiograph.delayGain.gain.value = hands.left.height / 400
+      audiograph.delayGain.gain.value = (hands.left.height-50) / 400
 
       timeout = setTimeout(round, 100)
     }
