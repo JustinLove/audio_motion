@@ -44,52 +44,57 @@ function(audiograph, hands, targets, $) {
     var round = function() {
       hands.poll()
 
-      $('#pointer').css({left: hands.right.x - 25, top: hands.right.y - 25})
+        $('#pointer').css({left: hands.right.x - 25, top: hands.right.y - 25})
 
-      targets.forEach(function(t) {
-        if (Math.abs(hands.right.x - t.x) < t.size && Math.abs(hands.right.y - t.y) < t.size) {
-          if (!t.active) {
-            //audiograph.note(100 + Math.random() * 550, 2)
-            if (t.sample) {
-              audiograph.play(t.sample)
-            } else {
-              audiograph.note(t.frequency, 2)
+        targets.forEach(function(t) {
+          if (Math.abs(hands.right.x - t.x) < t.size && Math.abs(hands.right.y - t.y) < t.size) {
+            if (!t.active) {
+              //audiograph.note(100 + Math.random() * 550, 2)
+              if (t.sample) {
+                audiograph.play(t.sample)
+              } else {
+                audiograph.note(t.frequency, 2)
+              }
+              t.active = true
             }
-            t.active = true
+          } else {
+            t.active = false
           }
-        } else {
-          t.active = false
-        }
-      })
+        })
 
-      if (run) {
-        requestAnimationFrame(round)
+        if (run) {
+          requestAnimationFrame(round)
+        }
+      }
+      round()
+      return function() {
+        run = false
       }
     }
-    round()
-    return function() {
-      run = false
-    }
-  }
 
 
-  $('#play').on('change', function() {
-    if ($(this).prop('checked')) {
-      start()
-    } else {
-      stop()
-    }
-  })
+    $('#play').on('change', function() {
+      if ($(this).prop('checked')) {
+        start()
+      } else {
+        stop()
+      }
+    })
 
-  return {
-    ready: function() {
-      audiograph.create()
+    return {
+      ready: function() {
+        audiograph.create()
 
-      hands.create()
+        hands.create()
 
-      targets.forEach(function(t) {
-        $("<div class='target' id="+t.id+"></div>")
-          .css({left: t.x - t.size, top: t.y - t.size})
+        targets.forEach(function(t) {
+          $("<div class='target' id="+t.id+"></div>")
+            .css({
+              left: t.x - t.size,
+              top: t.y - t.size,
+              width: t.size*2,
+              height: t.size*2,
+            })
           .appendTo('body')
         if (t.samplePath) {
           audiograph.load(t.samplePath, t.gain, function(buffer) {
