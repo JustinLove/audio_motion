@@ -1,16 +1,7 @@
-define(['jquery', 'leap'], function($) {
-  var context
-  var filter
-  var delay
-  var delayGain
-  var volume
-  var dest
-  var stopFrequencyWobble = function() {}
-  var stopVolumeWobble = function() {}
+define(['audiograph', 'jquery', 'leap'], function(audiograph, $) {
+  var controller
   var stopAnimation = function() {}
   var stopPointing = function() {}
-
-  var controller
 
   var right = {
     div: '#right',
@@ -47,83 +38,19 @@ define(['jquery', 'leap'], function($) {
     },
   ]
 
-  var createContext = function() {
-    var context
-
-    try {
-      // Fix up for prefixing
-      window.AudioContext = window.AudioContext||window.webkitAudioContext;
-      context = new AudioContext();
-    }
-    catch(e) {
-      alert('Web Audio API is not supported in this browser');
-    }
-
-    console.log(context)
-    return context
-  }
-
-  var note = function(frequency, t) {
-    var vol = context.createGain()
-    peak(vol.gain, 0.001, 1, t)
-    vol.connect(dest)
-    var source = context.createOscillator()
-    source.type = 'sine'
-    source.frequency.value = frequency
-    source.connect(vol)
-    source.start(context.currentTime)
-    source.stop(context.currentTime + t)
-  }
-
   var start = function() {
-    volume.gain.value = 0.1
-    volume.connect(context.destination)
-    //stopFrequencyWobble = wobble(source.frequency, 110, 440, 4)
-    //source.connect(volume)
-    //stopVolumeWobble = wobble(volume.gain, 1.0, 0.001, 2)
-
-    //filter = context.createBiquadFilter();
-    // Create the audio graph.
-    //filter.connect(dest);
-    // Create and specify parameters for the low-pass filter.
-    //filter.type = 0; // Low-pass filter. See BiquadFilterNode docs
-    //filter.frequency.value = 440
-    //filter.Q.value = 1
-
+    audiograph.start()
 
     controller.connect()
     stopAnimation = animate()
     stopPointer = point()
-    //note(440, 2)
   }
 
   var stop = function() {
+    audiograph.stop()
     controller.disconnect()
-    stopFrequencyWobble()
-    stopVolumeWobble()
     stopAnimation()
     stopPointing()
-    //filter.disconnect()
-    //filter = null
-    volume.disconnect()
-  }
-
-  var peak = function(param, a, b, t) {
-    param.setValueAtTime(a, context.currentTime)
-    param.exponentialRampToValueAtTime(b, context.currentTime + t/2)
-    param.exponentialRampToValueAtTime(a, context.currentTime + t)
-  }
-
-  var wobble = function(param, a, b, t) {
-    var timeout
-    var round = function() {
-      peak(param, a, b, t)
-      timeout = setTimeout(round, t*1000)
-    }
-    round()
-    return function() {
-      clearTimeout(timeout)
-    }
   }
 
   var animate = function() {
@@ -136,8 +63,8 @@ define(['jquery', 'leap'], function($) {
       //filter.Q.value = rWidth/2
       //volume.gain.value = Math.sqrt(Math.max(rDepth, 0))
 
-      delay.delayTime.value = left.width / -200
-      delayGain.gain.value = left.height / 400
+      audiograph.delay.delayTime.value = left.width / -200
+      audiograph.delayGain.gain.value = left.height / 400
 
       timeout = setTimeout(round, 100)
     }
@@ -158,8 +85,8 @@ define(['jquery', 'leap'], function($) {
         if (Math.abs(right.x - t.x) < t.size && Math.abs(right.y - t.y) < t.size) {
           if (!t.active) {
             console.log('hit')
-            //note(100 + Math.random() * 550, 2)
-            note(t.frequency, 2)
+            //audiograph.note(100 + Math.random() * 550, 2)
+            audiograph.note(t.frequency, 2)
             t.active = true
           }
         } else {
@@ -248,19 +175,7 @@ define(['jquery', 'leap'], function($) {
 
   return {
     ready: function() {
-      context = createContext()
-      volume = context.createGain()
-      var echo = context.createGain()
-      delay = context.createDelay(2)
-      delay.delayTime.value = 0.5
-      delayGain = context.createGain()
-      delayGain.gain.value = 0.5
-      echo.connect(volume)
-      echo.connect(delay)
-      delay.connect(delayGain)
-      delayGain.connect(echo)
-
-      dest = echo
+      audiograph.create()
 
       controller = new Leap.Controller()
 
