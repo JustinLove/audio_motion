@@ -136,7 +136,8 @@ define(['jquery', 'leap'], function($) {
       //filter.Q.value = rWidth/2
       //volume.gain.value = Math.sqrt(Math.max(rDepth, 0))
 
-      delay.delayTime.value = right.height / 400
+      delay.delayTime.value = left.width / -200
+      delayGain.gain.value = left.height / 400
 
       timeout = setTimeout(round, 100)
     }
@@ -211,7 +212,7 @@ define(['jquery', 'leap'], function($) {
     var s = data.stabilizedPalmPosition
     //console.log(s)
     hand.width = s[0]
-    hand.height = s[1]
+    hand.height = s[1] - 50
     hand.depth = s[2]
 
     $div.find('.id').text(hand.id)
