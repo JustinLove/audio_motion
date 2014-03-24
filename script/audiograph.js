@@ -67,14 +67,6 @@ define([], function() {
     //source.connect(AG.volume)
     //stopVolumeWobble = wobble(AG.volume.gain, 1.0, 0.001, 2)
 
-    //filter = context.createBiquadFilter();
-    // Create the audio graph.
-    //filter.connect(dest);
-    // Create and specify parameters for the low-pass filter.
-    //filter.type = 0; // Low-pass filter. See BiquadFilterNode docs
-    //filter.frequency.value = 440
-    //filter.Q.value = 1
-
     //note(440, 2)
   }
 
@@ -101,15 +93,23 @@ define([], function() {
   var create = function() {
     context = createContext()
     AG.volume = context.createGain()
+
     var echo = context.createGain()
     AG.delay = context.createDelay(2)
     AG.delay.delayTime.value = 0.0
     AG.delayGain = context.createGain()
     AG.delayGain.gain.value = 0.5
-    echo.connect(AG.volume)
-    echo.connect(AG.delay)
     AG.delay.connect(AG.delayGain)
     AG.delayGain.connect(echo)
+    echo.connect(AG.volume)
+    echo.connect(AG.delay)
+
+    //var filter = context.createBiquadFilter();
+    //filter.connect(AG.volume);
+    //filter.type = 'lowshelf'
+    //filter.frequency.value = 220
+    ////filter.Q.value = 1
+    //filter.gain.value = 2
 
     AG.dest = echo
   }
