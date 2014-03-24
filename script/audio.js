@@ -1,7 +1,9 @@
 define(['jquery', 'leap'], function($) {
   var context
   var filter
+  var delay
   var volume
+  var dest
   var stopFrequencyWobble = function() {}
   var stopVolumeWobble = function() {}
   var stopAnimation = function() {}
@@ -60,7 +62,7 @@ define(['jquery', 'leap'], function($) {
   var note = function(frequency, t) {
     var vol = context.createGain()
     peak(vol.gain, 0.001, 1, t)
-    vol.connect(volume)
+    vol.connect(dest)
     var source = context.createOscillator()
     source.type = 'sine'
     source.frequency.value = frequency
@@ -78,7 +80,7 @@ define(['jquery', 'leap'], function($) {
 
     //filter = context.createBiquadFilter();
     // Create the audio graph.
-    //filter.connect(volume);
+    //filter.connect(dest);
     // Create and specify parameters for the low-pass filter.
     //filter.type = 0; // Low-pass filter. See BiquadFilterNode docs
     //filter.frequency.value = 440
@@ -211,6 +213,17 @@ define(['jquery', 'leap'], function($) {
     ready: function() {
       context = createContext()
       volume = context.createGain()
+      var echo = context.createGain()
+      delay = context.createDelay(2)
+      delay.delayTime.value = 0.5
+      var delayGain = context.createGain()
+      delayGain.gain.value = 0.5
+      echo.connect(volume)
+      echo.connect(delay)
+      delay.connect(delayGain)
+      delayGain.connect(echo)
+
+      dest = echo
 
       controller = new Leap.Controller()
 
