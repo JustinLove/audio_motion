@@ -11,16 +11,19 @@ define(['jquery', 'leap'], function($) {
   var stopPointing = function() {}
 
   var controller
-  var rWidth
-  var rHeight
-  var rDepth
-  var rx
-  var ry
+
+  var right = {
+    div: '#right',
+  }
+
+  var left = {
+    div: '#left',
+  }
 
   var targets = [
     {
       id: 'target1',
-      x: 200,
+      x: 600,
       y: 200,
       size: 25,
       frequency: 220,
@@ -28,7 +31,7 @@ define(['jquery', 'leap'], function($) {
     },
     {
       id: 'target2',
-      x: 300,
+      x: 700,
       y: 100,
       size: 25,
       frequency: 330,
@@ -36,7 +39,7 @@ define(['jquery', 'leap'], function($) {
     },
     {
       id: 'target3',
-      x: 400,
+      x: 800,
       y: 200,
       size: 25,
       frequency: 440,
@@ -133,7 +136,7 @@ define(['jquery', 'leap'], function($) {
       //filter.Q.value = rWidth/2
       //volume.gain.value = Math.sqrt(Math.max(rDepth, 0))
 
-      delay.delayTime.value = rHeight / 400
+      delay.delayTime.value = right.height / 400
 
       timeout = setTimeout(round, 100)
     }
@@ -148,10 +151,10 @@ define(['jquery', 'leap'], function($) {
     var round = function() {
       processFrame(controller.frame())
 
-      $('#pointer').css({left: rx - 25, top: ry - 25})
+      $('#pointer').css({left: right.x - 25, top: right.y - 25})
 
       targets.forEach(function(t) {
-        if (Math.abs(rx - t.x) < t.size && Math.abs(ry - t.y) < t.size) {
+        if (Math.abs(right.x - t.x) < t.size && Math.abs(right.y - t.y) < t.size) {
           if (!t.active) {
             console.log('hit')
             //note(100 + Math.random() * 550, 2)
@@ -174,33 +177,63 @@ define(['jquery', 'leap'], function($) {
   }
 
   var processFrame = function(frame) {
-    if (frame.hands[0]) {
-      var s = frame.hands[0].stabilizedPalmPosition
-      //console.log(s)
-      rWidth = s[0]
-      rHeight = s[1]
-      rDepth = s[2]
+    if (frame.hands.length < 1) return
 
-      $('#width').text(rWidth)
-      $('#height').text(rHeight)
-      $('#depth').text(rDepth)
+    frame.hands.forEach(function(hand) {
+      if (!right.id && hand.stabilizedPalmPosition[0] > 0) {
+        right.id = hand.id
+      }
+
+      if (!left.id && hand.stabilizedPalmPosition[0] < 0) {
+        left.id = hand.id
+      }
+    })
+
+    var data
+
+    if (data = frame.handsMap[right.id]) {
+      processHand(right, data)
+    } else {
+      right.id = null
     }
 
-    if (frame.pointables[0]) {
-      var t = frame.pointables[0].stabilizedTipPosition
-      var d = frame.pointables[0].direction
+    if (data = frame.handsMap[left.id]) {
+      processHand(left, data)
+    } else {
+      left.id = null
+    }
+  }
 
-      rx = t[0] + d[0]*700
-      ry = t[1] + d[1]*700
+  var processHand = function(hand, data) {
+    var $div = $(hand.div)
+
+    //console.log(frame)
+    var s = data.stabilizedPalmPosition
+    //console.log(s)
+    hand.width = s[0]
+    hand.height = s[1]
+    hand.depth = s[2]
+
+    $div.find('.id').text(hand.id)
+    $div.find('.width').text(hand.width)
+    $div.find('.height').text(hand.height)
+    $div.find('.depth').text(hand.depth)
+
+    if (data.pointables[0]) {
+      var t = data.pointables[0].stabilizedTipPosition
+      var d = data.pointables[0].direction
+
+      hand.x = t[0] + d[0]*700
+      hand.y = t[1] + d[1]*700
 
       var width = $(document).width() / 2
       var height = $(document).height()
 
-      rx = width + rx/300 * width
-      ry = height - ry/300 * height
+      hand.x = width + hand.x/300 * width
+      hand.y = height - hand.y/300 * height
 
-      $('#rx').text(rx)
-      $('#ry').text(ry)
+      $div.find('.x').text(right.x)
+      $div.find('.y').text(right.y)
     }
   }
 

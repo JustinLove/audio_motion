@@ -11,3 +11,13 @@
   height: 50px;
   border: solid red 1px;
 }
+
+#left {
+  float: left;
+  width: 10em;
+}
+
+#right {
+  float: right;
+  width: 10em;
+}
