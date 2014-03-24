@@ -16,12 +16,29 @@ define(['jquery', 'leap'], function($) {
 
   var targets = [
     {
-      id: '#target1',
+      id: 'target1',
       x: 200,
       y: 200,
       size: 25,
+      frequency: 220,
       active: false,
-    }
+    },
+    {
+      id: 'target2',
+      x: 300,
+      y: 100,
+      size: 25,
+      frequency: 330,
+      active: false,
+    },
+    {
+      id: 'target3',
+      x: 400,
+      y: 200,
+      size: 25,
+      frequency: 440,
+      active: false,
+    },
   ]
 
   var createContext = function() {
@@ -128,17 +145,18 @@ define(['jquery', 'leap'], function($) {
 
       $('#pointer').css({left: rx - 25, top: ry - 25})
 
-      var t = targets[0]
-      if (Math.abs(rx - t.x) < t.size && Math.abs(ry - t.y) < t.size) {
-        if (!t.active) {
-          console.log('hit')
-          note(100 + Math.random() * 550, 2)
-          t.active = true
+      targets.forEach(function(t) {
+        if (Math.abs(rx - t.x) < t.size && Math.abs(ry - t.y) < t.size) {
+          if (!t.active) {
+            console.log('hit')
+            //note(100 + Math.random() * 550, 2)
+            note(t.frequency, 2)
+            t.active = true
+          }
+        } else {
+          t.active = false
         }
-      } else {
-        t.active = false
-      }
-
+      })
 
       if (run) {
         requestAnimationFrame(round)
@@ -196,8 +214,11 @@ define(['jquery', 'leap'], function($) {
 
       controller = new Leap.Controller()
 
-      var t = targets[0]
-      $(t.id).css({left: t.x - t.size, top: t.y - t.size})
+      targets.forEach(function(t) {
+        $("<div class='target' id="+t.id+"></div>")
+          .css({left: t.x - t.size, top: t.y - t.size})
+          .appendTo('body')
+      })
     }
   }
 })
