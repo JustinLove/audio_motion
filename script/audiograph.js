@@ -104,6 +104,11 @@ define([], function() {
     echo.connect(AG.volume)
     echo.connect(AG.delay)
 
+    AG.analyser = context.createAnalyser()
+    AG.fBin = new Uint8Array(AG.analyser.frequencyBinCount)
+    AG.tBin = new Uint8Array(AG.analyser.fftSize)
+    AG.volume.connect(AG.analyser)
+
     //var filter = context.createBiquadFilter();
     //filter.connect(AG.volume);
     //filter.type = 'lowshelf'

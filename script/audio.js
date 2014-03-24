@@ -1,5 +1,5 @@
-define(['audiograph', 'hands', 'targets', 'jquery'],
-function(audiograph, hands, targets, $) {
+define(['audiograph', 'hands', 'targets', 'draw', 'jquery'],
+function(audiograph, hands, targets, draw, $) {
   var stopAnimation = function() {}
   var stopPointing = function() {}
 
@@ -43,6 +43,11 @@ function(audiograph, hands, targets, $) {
       } else {
         $('#hand').text('')
       }
+
+      audiograph.analyser.getByteFrequencyData(audiograph.fBin)
+      draw.plot('freq', audiograph.fBin, 0, 1)
+      audiograph.analyser.getByteTimeDomainData(audiograph.tBin)
+      draw.plot('time', audiograph.tBin, 128, 0.5)
 
       timeout = setTimeout(round, 100)
     }
