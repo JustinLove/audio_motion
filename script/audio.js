@@ -45,6 +45,7 @@ define(['jquery', 'leap'], function($) {
     peak(vol.gain, 0.001, 1, t)
     vol.connect(volume)
     var source = context.createOscillator()
+    source.type = 'sine'
     source.frequency.value = frequency
     source.connect(vol)
     source.start(context.currentTime)
@@ -131,7 +132,7 @@ define(['jquery', 'leap'], function($) {
       if (Math.abs(rx - t.x) < t.size && Math.abs(ry - t.y) < t.size) {
         if (!t.active) {
           console.log('hit')
-          note(100 + Math.random() * 880, 2)
+          note(100 + Math.random() * 550, 2)
           t.active = true
         }
       } else {
