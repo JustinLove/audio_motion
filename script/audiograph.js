@@ -19,13 +19,16 @@ define([], function() {
     return context
   }
 
-  var load = function(url, success) {
+  var load = function(url, gain, success) {
     var request = new XMLHttpRequest();
     request.open('GET', url, true);
     request.responseType = 'arraybuffer';
 
     request.onload = function() {
-      context.decodeAudioData(request.response, success, function() {
+      context.decodeAudioData(request.response, function(buffer) {
+        buffer.gain = gain
+        success(buffer)
+      }, function() {
         console.log('decode failed for ', url)
       })
     }
@@ -100,7 +103,7 @@ define([], function() {
     AG.volume = context.createGain()
     var echo = context.createGain()
     AG.delay = context.createDelay(2)
-    AG.delay.delayTime.value = 0.5
+    AG.delay.delayTime.value = 0.0
     AG.delayGain = context.createGain()
     AG.delayGain.gain.value = 0.5
     echo.connect(AG.volume)
@@ -109,11 +112,6 @@ define([], function() {
     AG.delayGain.connect(echo)
 
     AG.dest = echo
-
-    load('samples/17__tictacshutup__studio-drums-1/428__tictacshutup__prac-kick.wav', function(buffer) {
-      buffer.gain = 5
-      AG.kick = buffer
-    })
   }
 
   var AG = {

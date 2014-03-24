@@ -50,8 +50,11 @@ function(audiograph, hands, targets, $) {
         if (Math.abs(hands.right.x - t.x) < t.size && Math.abs(hands.right.y - t.y) < t.size) {
           if (!t.active) {
             //audiograph.note(100 + Math.random() * 550, 2)
-            //audiograph.note(t.frequency, 2)
-            audiograph.play(audiograph.kick)
+            if (t.sample) {
+              audiograph.play(t.sample)
+            } else {
+              audiograph.note(t.frequency, 2)
+            }
             t.active = true
           }
         } else {
@@ -88,6 +91,11 @@ function(audiograph, hands, targets, $) {
         $("<div class='target' id="+t.id+"></div>")
           .css({left: t.x - t.size, top: t.y - t.size})
           .appendTo('body')
+        if (t.samplePath) {
+          audiograph.load(t.samplePath, t.gain, function(buffer) {
+            t.sample = buffer
+          })
+        }
       })
     }
   }

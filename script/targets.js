@@ -5,7 +5,8 @@ define([], function() {
       x: 600,
       y: 200,
       size: 25,
-      frequency: 220,
+      samplePath: 'samples/17__tictacshutup__studio-drums-1/428__tictacshutup__prac-kick.wav',
+      gain: 5,
       active: false,
     },
     {
