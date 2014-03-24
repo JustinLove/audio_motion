@@ -14,7 +14,8 @@ define([], function() {
       x: 700,
       y: 100,
       size: 25,
-      frequency: 330,
+      samplePath: 'samples/17__tictacshutup__studio-drums-1/421__tictacshutup__prac-hat-2.wav',
+      gain: 5,
       active: false,
     },
     {
@@ -22,7 +23,8 @@ define([], function() {
       x: 800,
       y: 200,
       size: 25,
-      frequency: 440,
+      samplePath: 'samples/17__tictacshutup__studio-drums-1/449__tictacshutup__prac-tom.wav',
+      gain: 5,
       active: false,
     },
   ]
