@@ -8,13 +8,22 @@ define(['jquery', 'leap'], function($) {
   var stopAnimation = function() {}
   var stopPointing = function() {}
 
-
   var controller
   var rWidth
   var rHeight
   var rDepth
   var rx
   var ry
+
+  var targets = [
+    {
+      id: '#target1',
+      x: 200,
+      y: 200,
+      size: 25,
+      active: false,
+    }
+  ]
 
   var createContext = function() {
     var context
@@ -106,10 +115,18 @@ define(['jquery', 'leap'], function($) {
     var round = function() {
       processFrame(controller.frame())
 
-      var $pointer = $('#pointer')
+      $('#pointer').css({left: rx - 25, top: ry - 25})
 
-      $pointer.css('left', rx)
-      $pointer.css('top', ry)
+      var t = targets[0]
+      if (Math.abs(rx - t.x) < t.size && Math.abs(ry - t.y) < t.size) {
+        if (!t.active) {
+          console.log('hit')
+          t.active = true
+        }
+      } else {
+        t.active = false
+      }
+
 
       if (run) {
         requestAnimationFrame(round)
@@ -168,7 +185,8 @@ define(['jquery', 'leap'], function($) {
 
       controller = new Leap.Controller()
 
-      console.log($(document).width())
+      var t = targets[0]
+      $(t.id).css({left: t.x - t.size, top: t.y - t.size})
     }
   }
 })
