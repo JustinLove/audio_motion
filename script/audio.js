@@ -1,33 +1,7 @@
-define(['audiograph', 'hands', 'jquery'], function(audiograph, hands, $) {
+define(['audiograph', 'hands', 'targets', 'jquery'],
+function(audiograph, hands, targets, $) {
   var stopAnimation = function() {}
   var stopPointing = function() {}
-
-  var targets = [
-    {
-      id: 'target1',
-      x: 600,
-      y: 200,
-      size: 25,
-      frequency: 220,
-      active: false,
-    },
-    {
-      id: 'target2',
-      x: 700,
-      y: 100,
-      size: 25,
-      frequency: 330,
-      active: false,
-    },
-    {
-      id: 'target3',
-      x: 800,
-      y: 200,
-      size: 25,
-      frequency: 440,
-      active: false,
-    },
-  ]
 
   var start = function() {
     audiograph.start()
