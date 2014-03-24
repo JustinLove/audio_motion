@@ -44,10 +44,11 @@ function(audiograph, hands, targets, $) {
     var round = function() {
       hands.poll()
 
-        $('#pointer').css({left: hands.right.x - 25, top: hands.right.y - 25})
+        $('#pointer').css({left: hands.right.px - 25, top: hands.right.py - 25})
+        $('#hand').css({left: hands.left.hx - 100, top: hands.left.hy - 100})
 
         targets.forEach(function(t) {
-          if (Math.abs(hands.right.x - t.x) < t.size && Math.abs(hands.right.y - t.y) < t.size) {
+          if (Math.abs(hands.right.px - t.x) < t.size && Math.abs(hands.right.py - t.y) < t.size) {
             if (!t.active) {
               //audiograph.note(100 + Math.random() * 550, 2)
               if (t.sample) {

@@ -52,21 +52,24 @@ define(['leap'], function() {
     $div.find('.height').text(hand.height)
     $div.find('.depth').text(hand.depth)
 
+    var width = $(document).width() / 2
+    var height = $(document).height()
+
+    hand.hx = width + hand.width/300 * width
+    hand.hy = height - hand.height/300 * height
+
     if (data.pointables[0]) {
       var t = data.pointables[0].stabilizedTipPosition
       var d = data.pointables[0].direction
 
-      hand.x = t[0] + d[0]*700
-      hand.y = t[1] + d[1]*700
+      hand.px = t[0] + d[0]*700
+      hand.py = t[1] + d[1]*700
 
-      var width = $(document).width() / 2
-      var height = $(document).height()
+      hand.px = width + hand.px/300 * width
+      hand.py = height - hand.py/300 * height
 
-      hand.x = width + hand.x/300 * width
-      hand.y = height - hand.y/300 * height
-
-      $div.find('.x').text(right.x)
-      $div.find('.y').text(right.y)
+      $div.find('.x').text(right.px)
+      $div.find('.y').text(right.py)
     }
   }
 

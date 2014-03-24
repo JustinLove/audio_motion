@@ -10,6 +10,13 @@
   border: solid red 1px;
 }
 
+#hand {
+  position: absolute;
+  width: 200px;
+  height: 200px;
+  border: solid green 1px;
+}
+
 #left {
   float: left;
   width: 10em;
