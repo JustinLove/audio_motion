@@ -40,17 +40,18 @@ define(['leap'], function() {
   var processHand = function(hand, data) {
     var $div = $(hand.div)
 
-    //console.log(frame)
     var s = data.stabilizedPalmPosition
     //console.log(s)
     hand.width = s[0]
     hand.height = s[1]
     hand.depth = s[2]
+    hand.fingers = data.fingers.length
 
     $div.find('.id').text(hand.id)
     $div.find('.width').text(hand.width)
     $div.find('.height').text(hand.height)
     $div.find('.depth').text(hand.depth)
+    $div.find('.fingers').text(hand.fingers)
 
     var width = $(document).width() / 2
     var height = $(document).height()

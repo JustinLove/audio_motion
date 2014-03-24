@@ -23,13 +23,26 @@ function(audiograph, hands, targets, $) {
     var round = function() {
       hands.poll()
 
+      $('#hand').css({left: hands.left.hx - 100, top: hands.left.hy - 100})
+
       //source.frequency.value = 2*rHeight
       //filter.frequency.value = Math.abs(rWidth)
       //filter.Q.value = rWidth/2
       //volume.gain.value = Math.sqrt(Math.max(rDepth, 0))
 
-      audiograph.delay.delayTime.value = hands.left.width / -200
-      audiograph.delayGain.gain.value = (hands.left.height-50) / 400
+      if (hands.left.fingers == 4 || hands.left.fingers == 5) {
+        $('#hand').text('V')
+        audiograph.volume.gain.value = (hands.left.height-50) / 400
+      } else if (hands.left.fingers == 2 || hands.left.fingers == 3) {
+        $('#hand').text('E')
+        audiograph.delay.delayTime.value = hands.left.width / -200
+        audiograph.delayGain.gain.value = (hands.left.height-50) / 400
+      } else if (hands.left.fingers == 0) {
+        $('#hand').text('-')
+        audiograph.volume.gain.value = 0
+      } else {
+        $('#hand').text('')
+      }
 
       timeout = setTimeout(round, 100)
     }
@@ -45,7 +58,6 @@ function(audiograph, hands, targets, $) {
       hands.poll()
 
         $('#pointer').css({left: hands.right.px - 25, top: hands.right.py - 25})
-        $('#hand').css({left: hands.left.hx - 100, top: hands.left.hy - 100})
 
         targets.forEach(function(t) {
           if (Math.abs(hands.right.px - t.x) < t.size && Math.abs(hands.right.py - t.y) < t.size) {
