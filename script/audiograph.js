@@ -19,6 +19,26 @@ define([], function() {
     return context
   }
 
+  var load = function(url, success) {
+    var request = new XMLHttpRequest();
+    request.open('GET', url, true);
+    request.responseType = 'arraybuffer';
+
+    request.onload = function() {
+      context.decodeAudioData(request.response, success, function() {
+        console.log('decode failed for ', url)
+      })
+    }
+    request.send();
+  }
+
+  var play = function(buffer) {
+    var source = context.createBufferSource()
+    source.buffer = buffer
+    source.connect(AG.dest)
+    source.start(context.currentTime)
+  }
+
   var peak = function(param, a, b, t) {
     param.setValueAtTime(a, context.currentTime)
     param.exponentialRampToValueAtTime(b, context.currentTime + t/2)
@@ -89,6 +109,11 @@ define([], function() {
     AG.delayGain.connect(echo)
 
     AG.dest = echo
+
+    load('samples/17__tictacshutup__studio-drums-1/428__tictacshutup__prac-kick.wav', function(buffer) {
+      buffer.gain = 5
+      AG.kick = buffer
+    })
   }
 
   var AG = {
@@ -96,6 +121,8 @@ define([], function() {
     start: start,
     stop: stop,
     note: note,
+    load: load,
+    play: play,
   }
 
   return AG

@@ -50,7 +50,8 @@ function(audiograph, hands, targets, $) {
         if (Math.abs(hands.right.x - t.x) < t.size && Math.abs(hands.right.y - t.y) < t.size) {
           if (!t.active) {
             //audiograph.note(100 + Math.random() * 550, 2)
-            audiograph.note(t.frequency, 2)
+            //audiograph.note(t.frequency, 2)
+            audiograph.play(audiograph.kick)
             t.active = true
           }
         } else {
