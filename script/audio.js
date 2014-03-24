@@ -2,9 +2,9 @@ define(['jquery', 'leap'], function($) {
   var context
   var source
   var filter
-  var gain
+  var volume
   var stopFrequencyWobble = function() {}
-  var stopGainWobble = function() {}
+  var stopVolumeWobble = function() {}
   var stopAnimation = function() {}
   var stopPointing = function() {}
 
@@ -44,21 +44,21 @@ define(['jquery', 'leap'], function($) {
   var start = function() {
     source = context.createOscillator()
     source.frequency.value = 440
-    gain.gain.value = 0.5
-    //stopFrequencyWobble = wobble(source.frequency, 110, 440, 2)
-    //source.connect(gain)
-    //stopGainWobble = wobble(gain.gain, 1.0, 0.1, 5)
+    volume.gain.value = 0.001
+    //stopFrequencyWobble = wobble(source.frequency, 110, 440, 4)
+    //source.connect(volume)
+    //stopVolumeWobble = wobble(volume.gain, 1.0, 0.001, 2)
 
     filter = context.createBiquadFilter();
     // Create the audio graph.
-    source.connect(filter);
-    filter.connect(gain);
+    source.connect(volume);
+    //filter.connect(volume);
     // Create and specify parameters for the low-pass filter.
     filter.type = 0; // Low-pass filter. See BiquadFilterNode docs
     filter.frequency.value = 440
     filter.Q.value = 1
 
-    //source.start(0)
+    source.start(0)
 
     controller.connect()
     //stopAnimation = animate()
@@ -68,7 +68,7 @@ define(['jquery', 'leap'], function($) {
   var stop = function() {
     controller.disconnect()
     stopFrequencyWobble()
-    stopGainWobble()
+    stopVolumeWobble()
     stopAnimation()
     stopPointing()
     filter.disconnect()
@@ -78,13 +78,17 @@ define(['jquery', 'leap'], function($) {
     source = null
   }
 
+  var peak = function(param, a, b, t) {
+    param.setValueAtTime(a, context.currentTime)
+    param.exponentialRampToValueAtTime(b, context.currentTime + t/2)
+    param.exponentialRampToValueAtTime(a, context.currentTime + t)
+  }
+
   var wobble = function(param, a, b, t) {
     var timeout
     var round = function() {
-      param.setValueAtTime(a, context.currentTime)
-      param.exponentialRampToValueAtTime(b, context.currentTime + t)
-      param.exponentialRampToValueAtTime(a, context.currentTime + t*2)
-      timeout = setTimeout(round, 2*t*1000)
+      peak(param, a, b, t)
+      timeout = setTimeout(round, t*1000)
     }
     round()
     return function() {
@@ -100,7 +104,7 @@ define(['jquery', 'leap'], function($) {
       source.frequency.value = 2*rHeight
       //filter.frequency.value = Math.abs(rWidth)
       filter.Q.value = rWidth/2
-      //gain.gain.value = Math.sqrt(Math.max(rDepth, 0))
+      //volume.gain.value = Math.sqrt(Math.max(rDepth, 0))
 
       timeout = setTimeout(round, 100)
     }
@@ -121,6 +125,7 @@ define(['jquery', 'leap'], function($) {
       if (Math.abs(rx - t.x) < t.size && Math.abs(ry - t.y) < t.size) {
         if (!t.active) {
           console.log('hit')
+          peak(volume.gain, 0.001, 1, 2) 
           t.active = true
         }
       } else {
@@ -180,8 +185,8 @@ define(['jquery', 'leap'], function($) {
   return {
     ready: function() {
       context = createContext()
-      gain = context.createGain()
-      gain.connect(context.destination)
+      volume = context.createGain()
+      volume.connect(context.destination)
 
       controller = new Leap.Controller()
 
