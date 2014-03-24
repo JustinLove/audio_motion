@@ -2,6 +2,7 @@ define(['jquery', 'leap'], function($) {
   var context
   var filter
   var delay
+  var delayGain
   var volume
   var dest
   var stopFrequencyWobble = function() {}
@@ -88,7 +89,7 @@ define(['jquery', 'leap'], function($) {
 
 
     controller.connect()
-    //stopAnimation = animate()
+    stopAnimation = animate()
     stopPointer = point()
     //note(440, 2)
   }
@@ -131,6 +132,8 @@ define(['jquery', 'leap'], function($) {
       //filter.frequency.value = Math.abs(rWidth)
       //filter.Q.value = rWidth/2
       //volume.gain.value = Math.sqrt(Math.max(rDepth, 0))
+
+      delay.delayTime.value = rHeight / 400
 
       timeout = setTimeout(round, 100)
     }
@@ -216,7 +219,7 @@ define(['jquery', 'leap'], function($) {
       var echo = context.createGain()
       delay = context.createDelay(2)
       delay.delayTime.value = 0.5
-      var delayGain = context.createGain()
+      delayGain = context.createGain()
       delayGain.gain.value = 0.5
       echo.connect(volume)
       echo.connect(delay)
