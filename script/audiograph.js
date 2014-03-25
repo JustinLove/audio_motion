@@ -61,7 +61,6 @@ define([], function() {
   }
 
   var start = function() {
-    AG.volume.gain.value = 0.1
     AG.volume.connect(context.destination)
     //stopFrequencyWobble = wobble(source.frequency, 110, 440, 4)
     //source.connect(AG.volume)

@@ -32,14 +32,14 @@ function(audiograph, hands, targets, draw, $) {
 
       if (hands.left.fingers == 2 || hands.left.fingers == 3) {
         $('#hand').text('V')
-        audiograph.volume.gain.value = (hands.left.height-50) / 400
+        $('.volume').attr('value', audiograph.volume.gain.value = (hands.left.height-50) / 400)
       } else if (hands.left.fingers == 4 || hands.left.fingers == 5) {
         $('#hand').text('E')
-        audiograph.delay.delayTime.value = hands.left.width / -200
-        audiograph.delayGain.gain.value = (hands.left.height-50) / 400
+        $('.delay').attr('value', audiograph.delay.delayTime.value = hands.left.width / -200)
+        $('.delayGain').attr('value', audiograph.delayGain.gain.value = (hands.left.height-50) / 400)
       } else if (hands.left.fingers == 0) {
         $('#hand').text('-')
-        audiograph.volume.gain.value = 0
+        $('.volume').attr('value', audiograph.volume.gain.value = 0)
       } else {
         $('#hand').text('')
       }
@@ -87,6 +87,9 @@ function(audiograph, hands, targets, draw, $) {
   return {
     ready: function() {
       audiograph.create()
+      $('.volume').attr('value', audiograph.volume.gain.value = 1)
+      $('.delayGain').attr('value', audiograph.delayGain.gain.value)
+      $('.delay').attr('value', audiograph.delay.delayTime.value)
 
       hands.create()
 

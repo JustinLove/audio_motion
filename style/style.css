@@ -37,6 +37,10 @@ canvas {
   left: 0;
 }
 
+#time {
+  top: 0;
+}
+
 #freq {
   bottom: 0;
 }
