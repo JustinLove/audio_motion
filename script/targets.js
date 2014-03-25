@@ -28,6 +28,12 @@ define(['jquery'], function($) {
       gain: 5,
       active: false,
     },
+    {
+      id: 'target5',
+      size: 50,
+      note: 440,
+      active: false,
+    },
   ]
 
   return {
@@ -37,7 +43,7 @@ define(['jquery'], function($) {
       var cx = $body.width() / 2
       var cy = $body.height() / 2
       var angle = Math.PI*2/targets.length
-      var size = Math.min(cx, cy) / 5
+      var size = Math.max(cx, cy) / 10
       targets.forEach(function(t, i) {
         t.size = size
         t.x = cx + cx/2 * Math.sin(angle * i)
