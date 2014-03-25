@@ -74,8 +74,12 @@ define(['jquery'], function($) {
             } else {
               audiograph.note(t.frequency, 2)
             }
+            $('#'+t.id).addClass('active')
             t.active = true
-            setTimeout(function() {t.active = false}, 500)
+            setTimeout(function() {
+              t.active = false
+              $('#'+t.id).removeClass('active')
+            }, 500)
           }
         } else {
           //t.active = false

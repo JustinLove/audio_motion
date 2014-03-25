@@ -63,6 +63,9 @@ function(audiograph, hands, targets, draw, $) {
       hands.poll()
 
       $('#pointer').css({left: hands.right.px - 25, top: hands.right.py - 25})
+      $('#pointer').clone().attr('id', '').addClass('trail')
+        .appendTo('body')
+        .fadeOut(500, function() {$(this).remove()})
 
       targets.intersect(hands.right, audiograph)
 

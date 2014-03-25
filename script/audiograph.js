@@ -44,7 +44,7 @@ define([], function() {
 
   var peak = function(param, a, b, t) {
     param.setValueAtTime(a, context.currentTime)
-    param.exponentialRampToValueAtTime(b, context.currentTime + t/2)
+    param.exponentialRampToValueAtTime(b, context.currentTime + t*0.1)
     param.exponentialRampToValueAtTime(a, context.currentTime + t)
   }
 
