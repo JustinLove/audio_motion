@@ -1,4 +1,4 @@
-define(['jquery'], function($) {
+define(['jquery', 'draw'], function($, draw) {
   var targets = [
     {
       id: 'target1',
@@ -48,7 +48,9 @@ define(['jquery'], function($) {
         t.size = size
         t.x = cx + cx/2 * Math.sin(angle * i)
         t.y = cy + cy/2 * Math.cos(angle * i)
-        $("<div class='target' id="+t.id+"></div>")
+        $("<canvas class='target' id="+t.id+"></canvas>")
+          .attr('width', t.size*2)
+          .attr('height', t.size*2)
           .css({
             left: t.x - t.size,
             top: t.y - t.size,
@@ -59,6 +61,7 @@ define(['jquery'], function($) {
 
         if (t.samplePath) {
           audiograph.load(t.samplePath, t.gain, function(buffer) {
+            draw.wave(t.id, buffer.getChannelData(0))
             t.sample = buffer
           })
         }
