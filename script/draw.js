@@ -9,9 +9,14 @@ define([], function() {
     c.translate(0, canvas.height * baseline)
     c.scale(canvas.width / l, -1)
     c.fillStyle = 'black'
+    c.beginPath()
+    c.moveTo(l, 0)
+    c.lineTo(0, 0)
     for (var i = 0;i < l;i++) {
-      c.fillRect(i, 0, 1, data[i] - base)
+      c.lineTo(i, data[i] - base)
     }
+    c.closePath()
+    c.fill()
     c.restore()
   }
 
