@@ -1,5 +1,5 @@
-define([], function() {
-  return [
+define(['jquery'], function($) {
+  var targets = [
     {
       id: 'target1',
       x: 400,
@@ -37,4 +37,43 @@ define([], function() {
       active: false,
     },
   ]
+
+  return {
+    targets: targets,
+    place: function(audiograph) {
+      targets.forEach(function(t) {
+        $("<div class='target' id="+t.id+"></div>")
+          .css({
+            left: t.x - t.size,
+            top: t.y - t.size,
+            width: t.size*2,
+            height: t.size*2,
+          })
+        .appendTo('body')
+
+        if (t.samplePath) {
+          audiograph.load(t.samplePath, t.gain, function(buffer) {
+            t.sample = buffer
+          })
+        }
+      })
+    },
+    intersect: function(hand, audiograph) {
+      targets.forEach(function(t) {
+        if (Math.abs(hand.px - t.x) < t.size && Math.abs(hand.py - t.y) < t.size) {
+          if (!t.active) {
+            //audiograph.note(100 + Math.random() * 550, 2)
+            if (t.sample) {
+              audiograph.play(t.sample)
+            } else {
+              audiograph.note(t.frequency, 2)
+            }
+            t.active = true
+          }
+        } else {
+          t.active = false
+        }
+      })
+    }
+  }
 })

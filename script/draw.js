@@ -2,7 +2,6 @@ define([], function() {
 
   var plot = function(id, data, base, baseline) {
     var canvas = document.getElementById(id)
-    console.log(canvas)
     var c = canvas.getContext('2d')
     var l = data.length
     c.clearRect(0, 0, canvas.width, canvas.height)

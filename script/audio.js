@@ -62,64 +62,35 @@ function(audiograph, hands, targets, draw, $) {
     var round = function() {
       hands.poll()
 
-        $('#pointer').css({left: hands.right.px - 25, top: hands.right.py - 25})
+      $('#pointer').css({left: hands.right.px - 25, top: hands.right.py - 25})
 
-        targets.forEach(function(t) {
-          if (Math.abs(hands.right.px - t.x) < t.size && Math.abs(hands.right.py - t.y) < t.size) {
-            if (!t.active) {
-              //audiograph.note(100 + Math.random() * 550, 2)
-              if (t.sample) {
-                audiograph.play(t.sample)
-              } else {
-                audiograph.note(t.frequency, 2)
-              }
-              t.active = true
-            }
-          } else {
-            t.active = false
-          }
-        })
+      targets.intersect(hands.right, audiograph)
 
-        if (run) {
-          requestAnimationFrame(round)
-        }
-      }
-      round()
-      return function() {
-        run = false
+      if (run) {
+        requestAnimationFrame(round)
       }
     }
+    round()
+    return function() {
+      run = false
+    }
+  }
 
+  $('#play').on('change', function() {
+    if ($(this).prop('checked')) {
+      start()
+    } else {
+      stop()
+    }
+  })
 
-    $('#play').on('change', function() {
-      if ($(this).prop('checked')) {
-        start()
-      } else {
-        stop()
-      }
-    })
+  return {
+    ready: function() {
+      audiograph.create()
 
-    return {
-      ready: function() {
-        audiograph.create()
+      hands.create()
 
-        hands.create()
-
-        targets.forEach(function(t) {
-          $("<div class='target' id="+t.id+"></div>")
-            .css({
-              left: t.x - t.size,
-              top: t.y - t.size,
-              width: t.size*2,
-              height: t.size*2,
-            })
-          .appendTo('body')
-        if (t.samplePath) {
-          audiograph.load(t.samplePath, t.gain, function(buffer) {
-            t.sample = buffer
-          })
-        }
-      })
+      targets.place(audiograph)
     }
   }
 })
