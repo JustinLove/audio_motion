@@ -30,10 +30,10 @@ function(audiograph, hands, targets, draw, $) {
       //filter.Q.value = rWidth/2
       //volume.gain.value = Math.sqrt(Math.max(rDepth, 0))
 
-      if (hands.left.fingers == 4 || hands.left.fingers == 5) {
+      if (hands.left.fingers == 2 || hands.left.fingers == 3) {
         $('#hand').text('V')
         audiograph.volume.gain.value = (hands.left.height-50) / 400
-      } else if (hands.left.fingers == 2 || hands.left.fingers == 3) {
+      } else if (hands.left.fingers == 4 || hands.left.fingers == 5) {
         $('#hand').text('E')
         audiograph.delay.delayTime.value = hands.left.width / -200
         audiograph.delayGain.gain.value = (hands.left.height-50) / 400
