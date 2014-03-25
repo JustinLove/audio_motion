@@ -1,0 +1,19 @@
+digraph audiograph {
+  sample1 -> dest
+  sample2 -> dest
+  osc1 -> vol1
+  vol1 -> dest
+
+  sample1 [style = dashed]
+  sample2 [style = dashed]
+  osc1 [style = dashed]
+  vol1 [style = dashed]
+
+  dest -> volume
+  dest -> delay
+  delay -> delayGain
+  delayGain -> dest
+
+  volume -> speaker
+  volume -> analyser
+}
