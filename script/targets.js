@@ -2,8 +2,6 @@ define(['jquery'], function($) {
   var targets = [
     {
       id: 'target1',
-      x: 400,
-      y: 300,
       size: 50,
       samplePath: 'samples/17__tictacshutup__studio-drums-1/428__tictacshutup__prac-kick.wav',
       gain: 5,
@@ -11,8 +9,6 @@ define(['jquery'], function($) {
     },
     {
       id: 'target2',
-      x: 600,
-      y: 100,
       size: 50,
       samplePath: 'samples/17__tictacshutup__studio-drums-1/421__tictacshutup__prac-hat-2.wav',
       gain: 5,
@@ -20,8 +16,6 @@ define(['jquery'], function($) {
     },
     {
       id: 'target3',
-      x: 800,
-      y: 300,
       size: 50,
       samplePath: 'samples/17__tictacshutup__studio-drums-1/449__tictacshutup__prac-tom.wav',
       gain: 5,
@@ -29,8 +23,6 @@ define(['jquery'], function($) {
     },
     {
       id: 'target4',
-      x: 600,
-      y: 500,
       size: 50,
       samplePath: 'samples/17__tictacshutup__studio-drums-1/447__tictacshutup__prac-snare.wav',
       gain: 5,
@@ -41,7 +33,15 @@ define(['jquery'], function($) {
   return {
     targets: targets,
     place: function(audiograph) {
-      targets.forEach(function(t) {
+      var $body = $('body')
+      var cx = $body.width() / 2
+      var cy = $body.height() / 2
+      var angle = Math.PI*2/targets.length
+      var size = Math.min(cx, cy) / 5
+      targets.forEach(function(t, i) {
+        t.size = size
+        t.x = cx + cx/2 * Math.sin(angle * i)
+        t.y = cy + cy/2 * Math.cos(angle * i)
         $("<div class='target' id="+t.id+"></div>")
           .css({
             left: t.x - t.size,
