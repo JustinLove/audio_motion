@@ -9,15 +9,14 @@ define([], function() {
     c.save()
     c.translate(0, canvas.height * baseline)
     c.scale(canvas.width / l, -canvas.height)
-    c.fillStyle = 'yellow'
+    c.strokeStyle = 'yellow'
+    c.lineWidth = 1/canvas.height
     c.beginPath()
-    c.moveTo(l, 0)
-    c.lineTo(0, 0)
+    c.moveTo(0, 0)
     for (var i = 0;i < l;i++) {
       c.lineTo(i, data[i] - base)
     }
-    c.closePath()
-    c.fill()
+    c.stroke()
     c.restore()
   }
 
